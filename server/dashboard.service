@@ -1,0 +1,16 @@
+[Unit]
+Description=Personal Dashboard Flask Server
+After=network.target
+
+[Service]
+Type=simple
+User=your_username
+WorkingDirectory=/path/to/Personal Dashboard/server
+ExecStart=/path/to/venv/bin/python3 app.py
+Restart=always
+RestartSec=5
+StandardOutput=null
+StandardError=null
+
+[Install]
+WantedBy=multi-user.target

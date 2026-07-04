@@ -1,0 +1,21 @@
+# Environments
+venv/
+.env
+.DS_Store
+
+# Output
+dist/
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Node
+node_modules/
+docs/devices.md
+mac_sync/sync_state.json
+mac_sync/NotionSync.app
+devices.md
+server/config.json
+.coverage

@@ -1,0 +1,35 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 3000
+  },
+  "sync": {
+    "intervalMinutes": 5
+  },
+  "reminders": {
+    "lists": ["YOUR_REMINDERS_LIST_NAME"]
+  },
+  "notion": {
+    "integrationBotId": "YOUR_NOTION_BOT_ID",
+    "priorityField": "Priority",
+    "priorityValues": ["1 - High ‼️", "2 - Medium 😈", "3 - Low 💃🏻"],
+    "statusField": "Status",
+    "doneValue": "Done 🙌"
+  },
+  "theme": {
+    "lightStartHour": 6,
+    "lightEndHour": 20
+  },
+  "voiceSummary": {
+    "language": "zh",
+    "maxRemindersToRead": 3
+  },
+  "cast": {
+    "googleHomeName": null,
+    "nestHubName": "YOUR_NEST_HUB_NAME",
+    "autoScreenCast": true,
+    "autoVoiceCast": true,
+    "restStartHour": 1,
+    "restEndHour": 6
+  }
+}

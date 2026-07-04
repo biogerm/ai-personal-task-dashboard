@@ -1,0 +1,23 @@
+{
+  "name": "personal-dashboard-ios-widgets",
+  "version": "1.0.0",
+  "description": "iOS Lock Screen Widgets for Personal Dashboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": ["scriptable", "ios", "widget", "notion"],
+  "author": "Open Source Contributor",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/personal-dashboard.git"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
+}

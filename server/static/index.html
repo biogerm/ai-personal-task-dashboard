@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css?v=888">
+</head>
+<body>
+    <main id="dashboard">
+        <div id="left-column">
+            <header id="header">
+                <div id="clock">--:--</div>
+                <div id="date-sync-group">
+                    <div id="date">--</div>
+                    <div id="sync-status">⏳ 正在加载...</div>
+                </div>
+            </header>
+            <section id="calendar-panel" class="panel">
+                <div id="calendar-grid"></div>
+            </section>
+        </div>
+        <section id="projects-panel" class="panel">
+            <ul id="projects-list"></ul>
+        </section>
+    </main>
+    <script src="/static/js/i18n.js?v=900"></script>
+    <script src="/static/js/app.js?v=900"></script>
+</body>
+</html>
