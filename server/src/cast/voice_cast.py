@@ -32,6 +32,15 @@ def cast_voice_summary(text, device_name=None, config=None):
             return
 
         host = config.get("server", {}).get("host", "127.0.0.1") if config else "127.0.0.1"
+        if host in ["0.0.0.0", "127.0.0.1", "localhost"]:
+            import socket
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+                    s.connect(("8.8.8.8", 80))
+                    host = s.getsockname()[0]
+            except Exception:
+                pass
+                
         url_fmt = f"http://{host}:{port}/static/audio/summary.mp3"
         mp3_url = url_fmt
 

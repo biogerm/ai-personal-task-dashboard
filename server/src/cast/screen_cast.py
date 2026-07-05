@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import subprocess
 from datetime import datetime
@@ -28,6 +29,15 @@ def start_screen_cast(config):
             
         port = config.get("server", {}).get("port", 3000)
         host = config.get("server", {}).get("host", "127.0.0.1")
+        if host in ["0.0.0.0", "127.0.0.1", "localhost"]:
+            import socket
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+                    s.connect(("8.8.8.8", 80))
+                    host = s.getsockname()[0]
+            except Exception:
+                pass
+                
         dashboard_url = f"http://{host}:{port}"
         nest_hub_name = config.get("cast", {}).get("nestHubName")
 
@@ -36,7 +46,7 @@ def start_screen_cast(config):
             return
             
         logger.info("Preparing to cast to %s using catt", nest_hub_name)
-        cmd = "timeout 20 catt -d '{}' cast_site {}".format(nest_hub_name, dashboard_url)
+        cmd = "timeout 20 {} -m catt.cli -d '{}' cast_site {}".format(sys.executable, nest_hub_name, dashboard_url)
         
         process = subprocess.run(cmd, shell=True, capture_output=True, text=True, errors='ignore')
         
@@ -54,7 +64,7 @@ def check_screen_cast(config):
         return
 
     try:
-        cmd = "timeout 15 catt -d '{}' info".format(nest_hub_name)
+        cmd = "timeout 15 {} -m catt.cli -d '{}' info".format(sys.executable, nest_hub_name)
         # Using subprocess to capture output
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = process.communicate()
@@ -68,7 +78,7 @@ def check_screen_cast(config):
         if is_rest_time(config):
             if is_dashcast:
                 logger.info("Night time detected, preparing to stop cast to let Hub rest...")
-                stop_cmd = "timeout 15 catt -d '{}' stop".format(nest_hub_name)
+                stop_cmd = "timeout 15 {} -m catt.cli -d '{}' stop".format(sys.executable, nest_hub_name)
                 subprocess.run(stop_cmd, shell=True)
             else:
                 logger.info("Night time, Hub is not casting.")
