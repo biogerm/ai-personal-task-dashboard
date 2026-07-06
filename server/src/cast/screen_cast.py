@@ -72,7 +72,13 @@ def check_screen_cast(config):
         
         # Check output for running apps
         is_dashcast = "DashCast" in output
-        is_backdrop = "Backdrop" in output or "Ambient" in output or "Default Media Receiver" in output
+        is_backdrop = (
+            "Backdrop" in output or 
+            "Ambient" in output or 
+            "Default Media Receiver" in output or
+            "is_stand_by: True" in output or
+            "display_name: None" in output
+        )
         
         # Handle night time logic
         if is_rest_time(config):
