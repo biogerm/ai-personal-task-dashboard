@@ -22,6 +22,6 @@ JavaScript modules executed by the iOS Scriptable application.
 - Designed to run within the memory and network constraints of the iOS Widget environment.
 
 ## Deployment Topology
-- **Sync Engine**: Runs as a `systemd` service or `launchd` daemon on an always-on Mac Mini.
-- **Flask Server**: Containerized or run via `gunicorn` on the host machine, listening for local network requests.
-- **End-User Devices**: iPhones rendering the widgets, optionally fetching data from the Flask Server or directly from Notion.
+- **Sync Engine**: Runs as a `launchd` daemon on the always-on Mac Mini (required for local Apple Reminders TCC access).
+- **Flask Server**: Runs on the Mac Mini (or a local Linux server like Raspberry Pi via `systemd` using the provided `dashboard.service`), listening for local network requests.
+- **End-User Devices**: iPhones rendering the widgets, fetching data from the Flask Server.
