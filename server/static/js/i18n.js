@@ -14,7 +14,11 @@ const I18N_DICT = {
         "ui.sync_failed": "⚠ {sources} Sync Failed",
         "ui.loading": "⏳ Loading...",
         "ui.last_sync": "Last sync: {time}",
-        "ui.unknown": "Unknown"
+        "ui.unknown": "Unknown",
+        "focus.overdue": "Overdue",
+        "focus.today": "Today",
+        "focus.due_in": "Due in {days} days",
+        "focus.no_date": "No Date"
     },
     zh: {
         "ui.no_active": "暂无进行中的项目",
@@ -29,7 +33,11 @@ const I18N_DICT = {
         "ui.sync_failed": "⚠ {sources} 同步失败",
         "ui.loading": "⏳ 正在加载...",
         "ui.last_sync": "上次同步: {time}",
-        "ui.unknown": "未知"
+        "ui.unknown": "未知",
+        "focus.overdue": "已过期",
+        "focus.today": "今天",
+        "focus.due_in": "{days} 天后到期",
+        "focus.no_date": "无日期"
     }
 };
 
