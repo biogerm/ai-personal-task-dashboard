@@ -31,5 +31,9 @@
     "autoVoiceCast": true,
     "restStartHour": 1,
     "restEndHour": 6
+  },
+  "carousel": {
+    "intervalSeconds": 300,
+    "screens": [0, 1]
   }
 }
