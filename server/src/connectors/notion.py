@@ -96,10 +96,19 @@ def _parse_page(page, config):
     priority_label = None
     priority_emoji = None
     if priority:
-        parts = priority.split(" ")
-        priority_label = parts[0]
-        if len(parts) > 1:
-            priority_emoji = parts[-1]
+        try:
+            # Extract "High" from formats like "1 - High ‼️"
+            priority_label = priority.split("-")[1].strip().split(" ")[0]
+            
+            orig_parts = priority.split(" ")
+            if len(orig_parts) > 1:
+                priority_emoji = orig_parts[-1]
+        except IndexError:
+            priority_label = None
+            priority_emoji = None
+        except Exception:
+            priority_label = None
+            priority_emoji = None
 
     priority_order = _priority_order(priority, priority_values)
 
@@ -142,8 +151,6 @@ def _priority_order(priority_value, priority_values):
 def fetch_projects(config):
     token = config["credentials"]["NOTION_API_TOKEN"]
     db_id = config["credentials"]["NOTION_DATABASE_ID"]
-    done_value = config["notion"]["doneValue"]
-    priority_values = config["notion"]["priorityValues"]
     status_field = config["notion"]["statusField"]
 
     filter_body = {

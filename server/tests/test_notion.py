@@ -3,9 +3,9 @@ from src.connectors.notion import _parse_page, _priority_order, fetch_projects
 
 
 def test_priority_order():
-    priority_values = ["High ‼️", "Medium 😈", "Low 💃🏻"]
-    assert _priority_order("High ‼️", priority_values) == 0
-    assert _priority_order("Low 💃🏻", priority_values) == 2
+    priority_values = ["1 - High ‼️", "2 - Medium 😈", "3 - Low 💃🏻"]
+    assert _priority_order("1 - High ‼️", priority_values) == 0
+    assert _priority_order("3 - Low 💃🏻", priority_values) == 2
     assert _priority_order(None, priority_values) == 999
     assert _priority_order("Unknown", priority_values) == 999
 
@@ -18,7 +18,7 @@ def test_parse_page_with_priority():
                 "title": [{"plain_text": "Test Project"}]
             },
             "Priority": {
-                "select": {"name": "High ‼️"}
+                "select": {"name": "1 - High ‼️"}
             },
             "Due Date": {
                 "date": {"start": "2026-06-30"}
@@ -27,18 +27,57 @@ def test_parse_page_with_priority():
         "last_edited_time": "2026-06-18T14:30:00.000Z",
         "url": "https://notion.so/123"
     }
-    priority_values = ["High ‼️", "Medium 😈", "Low 💃🏻"]
-    result = _parse_page(page, priority_values)
+    config = {"notion": {"priorityValues": ["1 - High ‼️", "2 - Medium 😈", "3 - Low 💃🏻"]}}
+    result = _parse_page(page, config)
     assert result is not None
     assert result["id"] == "123"
     assert result["title"] == "Test Project"
-    assert result["priority"] == "High ‼️"
+    assert result["priority"] == "1 - High ‼️"
     assert result["priority_label"] == "High"
     assert result["priority_order"] == 0
     assert result["due_date"] == "2026-06-30"
     assert result["last_edited_at"] == "2026-06-18T14:30:00.000Z"
     assert result["url"] == "https://notion.so/123"
 
+def test_parse_page_medium_priority():
+    page = {
+        "id": "123a",
+        "properties": {
+            "Name": {"title": [{"plain_text": "Medium Proj"}]},
+            "Priority": {"select": {"name": "2 - Medium 😈"}}
+        }
+    }
+    config = {"notion": {"priorityValues": ["1 - High ‼️", "2 - Medium 😈", "3 - Low 💃🏻"]}}
+    result = _parse_page(page, config)
+    assert result["priority_label"] == "Medium"
+    assert result["priority_order"] == 1
+
+def test_parse_page_low_priority():
+    page = {
+        "id": "123b",
+        "properties": {
+            "Name": {"title": [{"plain_text": "Low Proj"}]},
+            "Priority": {"select": {"name": "3 - Low 💃🏻"}}
+        }
+    }
+    config = {"notion": {"priorityValues": ["1 - High ‼️", "2 - Medium 😈", "3 - Low 💃🏻"]}}
+    result = _parse_page(page, config)
+    assert result["priority_label"] == "Low"
+    assert result["priority_order"] == 2
+
+def test_parse_page_unknown_priority():
+    page = {
+        "id": "123c",
+        "properties": {
+            "Name": {"title": [{"plain_text": "Unknown Proj"}]},
+            "Priority": {"select": {"name": "Unknown"}}
+        }
+    }
+    config = {"notion": {"priorityValues": ["1 - High ‼️", "2 - Medium 😈", "3 - Low 💃🏻"]}}
+    result = _parse_page(page, config)
+    # Does not crash, and parses cleanly or returns None
+    assert result["priority"] == "Unknown"
+    assert result["priority_label"] is None
 
 def test_parse_page_without_priority():
     page = {
@@ -54,8 +93,8 @@ def test_parse_page_without_priority():
         "last_edited_time": "2026-06-18T14:30:00.000Z",
         "url": "https://notion.so/124"
     }
-    priority_values = ["High ‼️", "Medium 😈", "Low 💃🏻"]
-    result = _parse_page(page, priority_values)
+    config = {"notion": {"priorityValues": ["1 - High ‼️", "2 - Medium 😈", "3 - Low 💃🏻"]}}
+    result = _parse_page(page, config)
     assert result is not None
     assert result["priority"] is None
     assert result["priority_label"] is None
@@ -72,8 +111,8 @@ def test_parse_page_empty_title():
             }
         }
     }
-    priority_values = ["High ‼️", "Medium 😈", "Low 💃🏻"]
-    assert _parse_page(page, priority_values) is None
+    config = {"notion": {"priorityValues": ["1 - High ‼️", "2 - Medium 😈", "3 - Low 💃🏻"]}}
+    assert _parse_page(page, config) is None
 
 
 @patch('src.connectors.notion._query_database')
@@ -84,7 +123,7 @@ def test_fetch_projects(mock_query):
             "NOTION_DATABASE_ID": "dbid"
         },
         "notion": {
-            "priorityValues": ["High ‼️", "Medium 😈", "Low 💃🏻"],
+            "priorityValues": ["1 - High ‼️", "2 - Medium 😈", "3 - Low 💃🏻"],
             "statusField": "Status",
             "doneValue": "Done 🙌"
         }
@@ -100,7 +139,7 @@ def test_fetch_projects(mock_query):
                             "title": [{"plain_text": "P1"}]
                         },
                         "Priority": {
-                            "select": {"name": "High ‼️"}
+                            "select": {"name": "1 - High ‼️"}
                         }
                     },
                     "last_edited_time": "2026-06-18T14:30:00.000Z",
