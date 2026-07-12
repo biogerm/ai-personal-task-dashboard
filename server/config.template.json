@@ -33,6 +33,7 @@
     "restEndHour": 6
   },
   "carousel": {
+    "enabled": true,
     "intervalSeconds": 300,
     "screens": [0, 1]
   }

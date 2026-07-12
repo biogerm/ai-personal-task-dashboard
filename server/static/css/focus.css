@@ -1,52 +1,64 @@
 /* focus.css */
 /* Implementation of Focus View (M9) */
 
-#focus-view {
+#screen-1 {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  padding: 2rem;
 }
 
-.focus-header {
+#focus-left-column {
+  display: none;
+}
+
+#focus-clock {
+  font-size: 5.5rem;
+  font-weight: 700;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1;
+  color: var(--text-primary);
+  letter-spacing: -2px;
+}
+
+#focus-grid-container {
+  flex: 1;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 20px;
-  font-size: 0.95rem;
-  color: var(--text-secondary, #666);
-  height: 36px;
-  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
 }
 
 #focus-grid {
   display: grid;
-  gap: 16px;
-  padding: 16px;
+  gap: 20px;
   width: 100%;
+  height: 100%;
   box-sizing: border-box;
-  align-content: start;
-  justify-content: start;
+  align-content: stretch;
+  justify-content: stretch;
 }
 
 #focus-grid.fill-screen {
-  height: calc(100vh - 60px);
   align-content: stretch;
   justify-content: stretch;
 }
 
 .focus-card {
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 20px;
+  padding: clamp(10px, 4cqh, 24px) clamp(12px, 5cqw, 24px);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   justify-content: space-between;
   opacity: 0;
   transform: translateY(20px);
-  transition:
-    opacity 0.4s ease,
-    transform 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  overflow: hidden;
+  container-type: size;
+  container-name: card;
+  gap: 20px;
 }
 
 .focus-card.focus-card-enter {
@@ -58,7 +70,6 @@
   background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
   color: #ffffff;
   box-shadow: 0 4px 20px rgba(238, 90, 36, 0.25);
-  animation: cardGlow 4s ease-in-out infinite alternate;
 }
 
 .focus-card-today {
@@ -67,43 +78,131 @@
   box-shadow: 0 4px 20px rgba(9, 132, 227, 0.2);
 }
 
-.focus-card-emoji {
-  font-size: 2rem;
-  margin-bottom: 8px;
+.focus-card-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* keep centered but fix title box */
+  height: 100%;
+  min-width: 0; /* important for flex children truncating */
 }
 
 .focus-card-title {
-  font-size: 1.15rem;
-  font-weight: 600;
-  line-height: 1.4;
-  flex: 1;
+  font-size: clamp(1.2rem, 20cqh, 4rem); /* Default for 10+ items */
+  font-weight: 700;
+  line-height: 1.15;
+  margin: auto 0;
+  /* Removed line clamp by default so it wraps naturally without truncation */
+}
+
+/* 1 item: Max 3 lines, huge font */
+#focus-grid[data-count="1"] .focus-card-title {
+  font-size: clamp(3rem, 11.5cqw, 10rem); 
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
-
-.focus-card-meta {
-  font-size: 0.85rem;
-  opacity: 0.85;
-  margin-top: 8px;
+#focus-grid[data-count="1"] .focus-card-no-date .focus-card-title {
+  font-size: clamp(3.5rem, 13cqw, 12rem);
 }
+
+/* 2 items: No truncation, huge font */
+#focus-grid[data-count="2"] .focus-card-title {
+  font-size: clamp(2.5rem, 35cqh, 7rem);
+}
+#focus-grid[data-count="2"] .focus-card-no-date .focus-card-title {
+  font-size: clamp(3rem, 40cqh, 8rem);
+}
+
+/* 3-4 items: Large font */
+#focus-grid[data-count="3"] .focus-card-title,
+#focus-grid[data-count="4"] .focus-card-title {
+  font-size: clamp(1.5rem, 22.5cqh, 4.5rem);
+}
+#focus-grid[data-count="3"] .focus-card-no-date .focus-card-title,
+#focus-grid[data-count="4"] .focus-card-no-date .focus-card-title {
+  font-size: clamp(1.65rem, 26cqh, 4.9rem);
+}
+
+/* 5-6 items: Very wide cards */
+#focus-grid[data-count="5"] .focus-card-title,
+#focus-grid[data-count="6"] .focus-card-title {
+  font-size: clamp(1.8rem, 35cqh, 5.5rem);
+}
+#focus-grid[data-count="5"] .focus-card-no-date .focus-card-title,
+#focus-grid[data-count="6"] .focus-card-no-date .focus-card-title {
+  font-size: clamp(2rem, 40cqh, 6rem);
+}
+
+/* 7-9 items: No truncation, standard font */
+#focus-grid[data-count="7"] .focus-card-title,
+#focus-grid[data-count="8"] .focus-card-title,
+#focus-grid[data-count="9"] .focus-card-title {
+  font-size: clamp(1.5rem, 25cqh, 4.5rem);
+}
+#focus-grid[data-count="7"] .focus-card-no-date .focus-card-title,
+#focus-grid[data-count="8"] .focus-card-no-date .focus-card-title,
+#focus-grid[data-count="9"] .focus-card-no-date .focus-card-title {
+  font-size: clamp(1.8rem, 30cqh, 5rem);
+}
+
+.focus-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 60px; /* Reduced to half of previous 120px */
+  text-align: center;
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
+  padding-left: 10px; /* Reduced from 20px */
+  height: 80%;
+}
+
+.countdown-number {
+  font-size: clamp(3.5rem, 60cqh, 10rem);
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.countdown-text {
+  font-size: clamp(1.2rem, 20cqh, 3rem);
+  font-weight: 600;
+  margin-top: 4px;
+  opacity: 0.9;
+}
+
+.countdown-vertical {
+  width: 1.1em; /* Force text to wrap character by character perfectly */
+  line-height: 1.1;
+  word-break: break-all;
+  white-space: pre-wrap;
+  text-align: center;
+  font-size: clamp(1.8rem, 25cqh, 4.5rem);
+  font-weight: 800;
+  letter-spacing: 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  color: #ffeaa7;
+}
+
+
 
 .focus-card-meta.date-overdue {
   color: #ffeaa7;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .focus-card-meta.date-today {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* Dark theme specific adjustments */
 body.dark-theme .focus-card-high {
   background: linear-gradient(135deg, #c0392b 0%, #96281b 100%);
   box-shadow: 0 4px 20px rgba(192, 57, 43, 0.35);
-  animation: cardGlowDark 4s ease-in-out infinite alternate;
 }
 
 body.dark-theme .focus-card-today {
@@ -111,24 +210,18 @@ body.dark-theme .focus-card-today {
   box-shadow: 0 4px 20px rgba(45, 108, 162, 0.3);
 }
 
-body.dark-theme .focus-card-meta.date-overdue {
-  color: #f8c291;
+body.dark-theme .focus-card-right {
+  border-left-color: rgba(255, 255, 255, 0.1);
 }
 
-@keyframes cardGlow {
-  from {
-    box-shadow: 0 4px 20px rgba(238, 90, 36, 0.25);
-  }
-  to {
-    box-shadow: 0 6px 30px rgba(238, 90, 36, 0.45);
-  }
+/* Shaking animation trigger */
+.focus-card.shake {
+  animation: cardShake 0.6s cubic-bezier(.36,.07,.19,.97) both;
 }
 
-@keyframes cardGlowDark {
-  from {
-    box-shadow: 0 4px 20px rgba(192, 57, 43, 0.35);
-  }
-  to {
-    box-shadow: 0 6px 30px rgba(192, 57, 43, 0.55);
-  }
+@keyframes cardShake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(4px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+  40%, 60% { transform: translate3d(6px, 0, 0); }
 }

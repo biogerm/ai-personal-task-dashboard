@@ -72,11 +72,12 @@ def check_screen_cast(config):
         
         # Check output for running apps
         is_dashcast = "DashCast" in output
+        # Only consider it idle if it is explicitly the Backdrop/Ambient screen.
+        # Do not use "Default Media Receiver" or "is_stand_by: True" as they might 
+        # be true for background music (e.g. Spotify, YouTube Music).
         is_backdrop = (
-            "Backdrop" in output or 
-            "Ambient" in output or 
-            "Default Media Receiver" in output or
-            "is_stand_by: True" in output or
+            "display_name: Backdrop" in output or 
+            "display_name: Ambient" in output or 
             "display_name: None" in output
         )
         

@@ -25,9 +25,18 @@ function init() {
       (data) =>
         typeof focusView !== "undefined" ? focusView.focusHasData(data) : false,
       (data) => {
-        if (typeof focusView !== "undefined" && data)
-          focusView.renderFocusView(data);
+        if (typeof focusView !== "undefined" && data) {
+          focusView.renderFocusView(data, true);
+          if (typeof focusView.animateCards === "function") {
+            focusView.animateCards();
+          }
+        }
       },
+      () => {
+        if (typeof focusView !== "undefined" && typeof focusView.exitCards === "function") {
+          focusView.exitCards();
+        }
+      }
     );
   }
 
@@ -58,15 +67,8 @@ function updateClock() {
 }
 
 function updateTheme() {
-  const now = new Date();
-  const hour = now.getHours();
-
-  // Light theme 6:00 - 20:00 (6 to 19)
-  if (hour >= 6 && hour < 20) {
-    document.body.classList.remove("dark-theme");
-  } else {
-    document.body.classList.add("dark-theme");
-  }
+  document.body.classList.remove("dark-theme");
+  document.body.classList.add("light-theme");
 }
 
 function fetchTasks() {

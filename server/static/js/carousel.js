@@ -41,9 +41,11 @@ const carousel = (function () {
       if (index === currentIndex) {
         v.element.style.display = "flex";
         v.element.style.opacity = "1";
+        v.element.style.zIndex = "10";
       } else {
         v.element.style.display = "none";
         v.element.style.opacity = "0";
+        v.element.style.zIndex = "1";
       }
     });
 
@@ -83,33 +85,31 @@ const carousel = (function () {
     const oldView = views[currentIndex];
     const newView = views[targetIndex];
 
-    if (oldView) {
+    if (newView) {
+      newView.element.style.display = "flex";
+      newView.element.style.zIndex = "10";
+      // Force reflow
+      void newView.element.offsetWidth;
+      newView.element.style.opacity = "1";
+      
+      if (newView.onEnterFn) {
+        newView.onEnterFn(currentData);
+      }
+    }
+
+    if (oldView && oldView !== newView) {
+      oldView.element.style.zIndex = "1";
       oldView.element.style.opacity = "0";
       if (oldView.onExitFn) {
         oldView.onExitFn();
       }
+      
+      setTimeout(() => {
+        if (oldView.element.style.opacity === "0") {
+          oldView.element.style.display = "none";
+        }
+      }, 500);
     }
-
-    setTimeout(() => {
-      if (oldView) {
-        oldView.element.style.display = "none";
-      }
-      if (newView) {
-        newView.element.style.display = "flex";
-        // requestAnimationFrame fallback for Node.js testing
-        if (typeof requestAnimationFrame !== "undefined") {
-          requestAnimationFrame(() => {
-            newView.element.style.opacity = "1";
-          });
-        } else {
-          newView.element.style.opacity = "1";
-        }
-
-        if (newView.onEnterFn) {
-          newView.onEnterFn(currentData);
-        }
-      }
-    }, 500);
 
     currentIndex = targetIndex;
 

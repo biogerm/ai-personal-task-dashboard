@@ -76,6 +76,7 @@ body {
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
+    white-space: nowrap;
 }
 
 #clock {
@@ -120,6 +121,7 @@ body {
     gap: 1.5rem;
     flex-grow: 1;
     min-height: 0;
+    height: 100%;
 }
 
 #calendar-panel {
