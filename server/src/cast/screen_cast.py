@@ -46,6 +46,12 @@ def start_screen_cast(config):
             return
             
         logger.info("Preparing to cast to %s using catt", nest_hub_name)
+        
+        # Stop existing session first to ensure a hard reload
+        stop_cmd = "timeout 15 {} -m catt.cli -d '{}' stop".format(sys.executable, nest_hub_name)
+        subprocess.run(stop_cmd, shell=True, errors='ignore')
+        time.sleep(3)
+        
         cmd = "timeout 20 {} -m catt.cli -d '{}' cast_site {}".format(sys.executable, nest_hub_name, dashboard_url)
         
         process = subprocess.run(cmd, shell=True, capture_output=True, text=True, errors='ignore')
@@ -73,13 +79,18 @@ def check_screen_cast(config):
         # Check output for running apps
         is_dashcast = "DashCast" in output
         # Only consider it idle if it is explicitly the Backdrop/Ambient screen.
-        # Do not use "Default Media Receiver" or "is_stand_by: True" as they might 
-        # be true for background music (e.g. Spotify, YouTube Music).
+        # Do not use "Default Media Receiver" as it might be used for background music.
         is_backdrop = (
             "display_name: Backdrop" in output or 
             "display_name: Ambient" in output or 
             "display_name: None" in output
         )
+        
+        # If DashCast is technically the active app but the device is in standby (screen off/sleeping),
+        # we need to recast it to wake the screen back up.
+        if is_dashcast and "is_stand_by: True" in output:
+            is_dashcast = False
+            is_backdrop = True
         
         # Handle night time logic
         if is_rest_time(config):
