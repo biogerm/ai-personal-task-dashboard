@@ -82,10 +82,15 @@ function renderFocusCard(task, index, isSupplementary, animate = false) {
     card.classList.add("shake-target");
   }
 
-  if (task.urgency === "overdue" || task.urgency === "today") {
+  if (task.urgency === "overdue") {
     const vertEl = document.createElement("div");
     vertEl.className = "countdown-vertical";
     vertEl.textContent = "已到期";
+    rightEl.appendChild(vertEl);
+  } else if (task.urgency === "today") {
+    const vertEl = document.createElement("div");
+    vertEl.className = "countdown-vertical";
+    vertEl.textContent = "今日到期";
     rightEl.appendChild(vertEl);
   } else if (task.due_date) {
     const due = new Date(task.due_date);
@@ -186,13 +191,13 @@ function renderFocusView(data, animate = false) {
     if (!isNaN(mockCount)) {
       // Extended pool of mock titles
       let MOCK_TITLES = [
-        "检查基金出售并转换",
-        "更新Google Home任务视图",
-        "查看Sportby二手雪板记录",
-        "申请美国签证",
-        "Get a work certificate from HR",
-        "Put my iPhone 13 advertisement online again",
-        "Print traffic accident pdf in the office"
+        "Review project proposal draft",
+        "Prepare presentation for tomorrow",
+        "Reply to pending emails",
+        "Buy groceries and household items",
+        "Schedule dentist appointment",
+        "Call parents this weekend",
+        "Update personal dashboard code"
       ];
       
       // Shuffle the mock titles randomly
